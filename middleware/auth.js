@@ -1,0 +1,13 @@
+const auth = (req, res, next) => {
+    if (req.session && req.session.userId) {
+      // Set user info in request
+      req.user = { id: req.session.userId };
+      next();
+    } else {
+      console.log('Session:', req.session); // Debug log
+      return res.status(401).json({ error: 'Unauthorized - Please login first' });
+    }
+};
+
+module.exports = auth;
+  
