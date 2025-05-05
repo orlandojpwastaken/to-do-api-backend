@@ -1,17 +1,55 @@
 const User = require('../models/user');
 const bcrypt = require('bcrypt');
 
+// Methods
+const validateEmail = (email) => {
+  // Basic email regex
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+};
+
+const validatePassword = (password) => {
+  // 8-20 characters, with upper, lower, number, special char
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,20}$/;
+  return passwordRegex.test(password);
+};
+
 const userController = {
-  // Register a new user
   register: async (req, res) => {
     try {
       const { email, password, firstName, lastName } = req.body;
+
+      // Check for required fields
+      if (!email || !password || !firstName) {
+        return res.status(400).json({ error: 'Email, password, and first name are required.' });
+      }
+
+      // Validate email format
+      if (!validateEmail(email)) {
+        return res.status(400).json({ error: 'Invalid email format.' });
+      }
+
+      // Check if email already exists
+      const existingUser = await User.findOne({ where: { email } });
+      if (existingUser) {
+        return res.status(400).json({ error: 'Email already registered.' });
+      }
+
+      // Validate password strength
+      if (!validatePassword(password)) {
+        return res.status(400).json({ error: 'Password must be 8-20 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character.' });
+      }
+
+      // Hash the password
+      const hashedPassword = await bcrypt.hash(password, 10);
+
       const user = await User.create({
         email,
-        password,
+        password: hashedPassword,
         firstName,
         lastName
       });
+
       res.status(201).json({
         message: 'User created successfully',
         user: { id: user.id, email: user.email, firstName: user.firstName, lastName: user.lastName }
@@ -28,12 +66,14 @@ const userController = {
       const user = await User.findOne({ where: { email } });
 
       if (!user) {
-        return res.status(401).json({ error: 'Invalid credentials' });
+        // return res.status(401).json({ error: 'Invalid credentials' });
+        return res.status(401).json({ error: 'Invalid credentials, email' });
       }
 
       const isValidPassword = await bcrypt.compare(password, user.password);
       if (!isValidPassword) {
-        return res.status(401).json({ error: 'Invalid credentials' });
+        // return res.status(401).json({ error: 'Invalid credentials' });
+        return res.status(401).json({ error: 'Invalid password' });
       }
 
       // Save session data

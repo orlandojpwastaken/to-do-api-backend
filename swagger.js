@@ -10,6 +10,16 @@ const options = {
     },
   },
   apis: ['./routes/*.js'],
+  components: {
+    securitySchemes: {
+      cookieAuth: {
+        type: 'apiKey',
+        in: 'cookie',
+        name: 'connect.sid'
+      }
+    }
+  }
+  
 };
 
 const specs = swaggerJsdoc(options);

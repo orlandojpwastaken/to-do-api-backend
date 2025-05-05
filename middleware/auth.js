@@ -1,6 +1,6 @@
 const auth = (req, res, next) => {
     if (req.session && req.session.userId) {
-      // Set user info in request
+      // Set user's info in the request
       req.user = { id: req.session.userId };
       next();
     } else {
@@ -10,4 +10,3 @@ const auth = (req, res, next) => {
 };
 
 module.exports = auth;
-  

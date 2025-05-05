@@ -5,20 +5,22 @@ const todoController = {
     try {
       const { title, description, deadline } = req.body;
       const userId = req.user.id;
-
+  
       const newTodo = await Todo.create({
         title,
         description,
         deadline,
+        completed: false,
         userId
       });
-
+  
       res.status(201).json(newTodo);
     } catch (err) {
-      console.error('❌ Error creating todo:', err);
+      console.error('Error creating todo:', err);
       res.status(500).json({ error: 'Failed to create todo' });
     }
   },
+  
 
   getAllTodos: async (req, res) => {
     try {
@@ -26,7 +28,7 @@ const todoController = {
       const todos = await Todo.findAll({ where: { userId } });
       res.json(todos);
     } catch (err) {
-      console.error('❌ Error fetching todos:', err);
+      console.error('Error fetching todos:', err);
       res.status(500).json({ error: 'Failed to fetch todos' });
     }
   },
@@ -43,7 +45,7 @@ const todoController = {
 
       res.json(todo);
     } catch (err) {
-      console.error('❌ Error fetching todo:', err);
+      console.error('Error fetching todo:', err);
       res.status(500).json({ error: 'Failed to fetch todo' });
     }
   },
@@ -61,7 +63,7 @@ const todoController = {
       await todo.update(req.body);
       res.json(todo);
     } catch (err) {
-      console.error('❌ Error updating todo:', err);
+      console.error('Error updating todo:', err);
       res.status(500).json({ error: 'Failed to update todo' });
     }
   },
@@ -79,7 +81,7 @@ const todoController = {
       await todo.destroy();
       res.json({ message: 'Todo deleted successfully' });
     } catch (err) {
-      console.error('❌ Error deleting todo:', err);
+      console.error('Error deleting todo:', err);
       res.status(500).json({ error: 'Failed to delete todo' });
     }
   }
