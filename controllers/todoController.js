@@ -84,7 +84,30 @@ const todoController = {
       console.error('Error deleting todo:', err);
       res.status(500).json({ error: 'Failed to delete todo' });
     }
+  },
+
+  toggleCompletion: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const userId = req.user.id;
+
+      const todo = await Todo.findOne({ where: { id, userId } });
+  
+      if (!todo) {
+        return res.status(404).json({ error: 'Todo not found' });
+      }
+  
+      const updatedTodo = await todo.update({
+        completed: !todo.completed
+      });
+  
+      res.json(updatedTodo);
+    } catch (err) {
+      console.error('Error toggling todo completion:', err);
+      res.status(500).json({ error: 'Failed to toggle todo completion' });
+    }
   }
+  
 };
 
 module.exports = todoController;

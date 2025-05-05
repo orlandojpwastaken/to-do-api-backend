@@ -32,6 +32,9 @@ router.use(auth);
  *         description:
  *           type: string
  *           description: Optional description of the todo
+ *         completed:
+ *           type: boolean
+ *           description: Whether the to-do is completed
  *         deadline:
  *           type: string
  *           format: date-time
@@ -194,5 +197,32 @@ router.put('/:id', todoController.updateTodo);
  *         description: Unauthorized
  */
 router.delete('/:id', todoController.deleteTodo);
+
+/**
+ * @swagger
+ * /api/todos/{id}/toggle:
+ *   patch:
+ *     summary: Toggle the completed status of a todo
+ *     tags: [Todos]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: ID of the todo
+ *     responses:
+ *       200:
+ *         description: Toggles the state of the todo
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Todo'
+ *       404:
+ *         description: To-do not found
+ *       401:
+ *         description: Unauthorized
+ */
+router.patch('/:id/toggle', todoController.toggleCompletion);
 
 module.exports = router;
