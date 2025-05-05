@@ -4,7 +4,7 @@ const auth = (req, res, next) => {
       req.user = { id: req.session.userId };
       next();
     } else {
-      console.log('Session:', req.session); // Debug log
+      console.log('Session:', req.session); 
       return res.status(401).json({ error: 'Unauthorized - Please login first' });
     }
 };
