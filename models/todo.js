@@ -18,7 +18,15 @@ const Todo = sequelize.define('Todo', {
     deadline: {
         type: DataTypes.DATE,
         allowNull: false,
-    },
+        validate: {
+          isDate: true,
+          isNotInPast(value) {
+            if (new Date(value) < new Date()) {
+              throw new Error('Deadline cannot be in the past');
+            }
+          }
+        }
+      },
     userId: {
         type: DataTypes.INTEGER,
         allowNull: false,
