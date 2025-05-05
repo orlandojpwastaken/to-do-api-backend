@@ -10,6 +10,32 @@ const auth = require('../middleware/auth');
  *   description: User management and authentication
  */
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     User:
+ *       type: object
+ *       properties:
+ *         email:
+ *           type: string
+ *           description: User's email
+ *         password:
+ *           type : string
+ *           description: User's password (hashed)
+ *         firstName:
+ *           type: string
+ *           description: User's first name
+ *         lastName:
+ *           type: string
+ *           description: User's last name (optional)
+ *       example:
+ *         email: user@example.com
+ *         firstName: John
+ *         lastName: Doe
+ */
+
+
 // Public routes
 
 /**
